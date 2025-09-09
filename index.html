@@ -176,6 +176,7 @@
 <div id="toast">App no instalada</div>
 
 <script>
+  // Toast sigue igual
   function showToast(message) {
     const toast = document.getElementById("toast");
     toast.textContent = message;
@@ -187,27 +188,13 @@
     }, 2000);
   }
 
-  function openApp(url) {
-    const start = Date.now();
-    const iframe = document.createElement("iframe");
-    iframe.style.display = "none";
-    iframe.src = url;
-    document.body.appendChild(iframe);
-
-    setTimeout(() => {
-      document.body.removeChild(iframe);
-      if (Date.now() - start < 1500) {
-        showToast("App no instalada");
-      }
-    }, 1000);
-  }
-
+  // Botones ahora usan Intents de Android
   document.getElementById("tvButton").addEventListener("click", () => {
-    openApp("webvideocaster://https://lzplayerfree.blogspot.com/?url=U2FsdGVkX194Yakl5WUPPvf3sQWIypuGMQAC2sRdcIsk8ecQzGwOCTjPysaOgrWk6PseE8J/ooo6eYR/w01XI9%2Bp7bXubUCJDLvWY5quZlgUv%2B8x9/f1b%2BERzg4xIrI6&m=1");
+    window.location.href = "intent://lzplayerfree.blogspot.com/?url=U2FsdGVkX194Yakl5WUPPvf3sQWIypuGMQAC2sRdcIsk8ecQzGwOCTjPysaOgrWk6PseE8J/ooo6eYR/w01XI9%2Bp7bXubUCJDLvWY5quZlgUv%2B8x9/f1b%2BERzg4xIrI6&m=1#Intent;scheme=https;package=com.instantbits.cast.webvideo;end";
   });
 
   document.getElementById("downloadButton").addEventListener("click", () => {
-    openApp("idm://https://lzplayerfree.blogspot.com/?url=U2FsdGVkX194Yakl5WUPPvf3sQWIypuGMQAC2sRdcIsk8ecQzGwOCTjPysaOgrWk6PseE8J/ooo6eYR/w01XI9%2Bp7bXubUCJDLvWY5quZlgUv%2B8x9/f1b%2BERzg4xIrI6&m=1");
+    window.location.href = "intent://lzplayerfree.blogspot.com/?url=U2FsdGVkX194Yakl5WUPPvf3sQWIypuGMQAC2sRdcIsk8ecQzGwOCTjPysaOgrWk6PseE8J/ooo6eYR/w01XI9%2Bp7bXubUCJDLvWY5quZlgUv%2B8x9/f1b%2BERzg4xIrI6&m=1#Intent;scheme=https;package=com.internet.download.manager;end";
   });
 </script>
 
