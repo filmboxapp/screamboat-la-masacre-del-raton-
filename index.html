@@ -5,160 +5,219 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FILMBOX</title>
 <style>
-  body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #121212;
-    color: #fff;
-  }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #111;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
 
-  /* Contenedor principal */
-  .container {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 10px;
-  }
+/* Fondo detrás del póster con gradiente hacia negro */
+.detail-background {
+  width: 100%;
+  height: 250px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
 
-  /* Reproductor */
-  .player {
-    width: 100%;
-    aspect-ratio: 16/9;
-    background: #222;
-    border-radius: 10px;
-    overflow: hidden;
-    margin-bottom: 15px;
-    position: relative;
-  }
+.detail-background::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(17,17,17,0) 60%, rgba(17,17,17,1) 100%);
+}
 
-  .player iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-  }
+/* Contenedor central compacto */
+.detail-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 280px;
+  margin-top: -120px;
+  z-index: 1;
+  gap: 10px;
+}
 
-  /* Tarjeta de información */
-  .info-card {
-    background: #1e1e1e;
-    border-radius: 10px;
-    padding: 15px;
-    display: flex;
-    gap: 15px;
-    margin-bottom: 15px;
-  }
+/* Póster pequeño y centrado */
+.poster-container img {
+  width: 160px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.7);
+}
 
-  .poster img {
-    width: 120px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-  }
+/* Detalles debajo del póster */
+.details-container {
+  text-align: center;
+  width: 100%;
+  background-color: #111;
+  padding: 15px;
+  border-radius: 10px;
+  position: relative;
+}
 
-  .details h2 {
-    margin: 0;
-    font-size: 20px;
-  }
+.details-container h1 {
+  font-size: 18px;
+  margin: 5px 0 5px;
+  color: #fff;
+}
 
-  .details p {
-    margin: 4px 0;
-    font-size: 14px;
-    color: #ccc;
-  }
+.details-container .info {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
 
-  .rating {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
+.details-container .info .item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: #fff;
+}
 
-  .rating svg {
-    width: 20px;
-    height: 20px;
-    fill: #ffcc00;
-  }
+.details-container .info svg {
+  width: 12px;
+  height: 12px;
+  fill: #fff;
+}
 
-  /* Botón */
-  .buttons {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
-  }
+/* Sinopsis */
+.details-container .sinopsis-wrapper {
+  max-height: 80px;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+  position: relative;
+  padding-bottom: 10px; /* espacio extra para que no choque con botón */
+}
 
-  .buttons button {
-    flex: 1;
-    padding: 10px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    background: #333;
-    color: #fff;
-    transition: 0.3s;
-  }
+.details-container p {
+  font-size: 13px;
+  line-height: 1.3;
+  color: #fff;
+  margin: 0;
+}
 
-  /* Efecto hover y active */
-  .buttons button:hover,
-  .buttons button:active {
-    background: #e50914; /* rojo Netflix-style */
-  }
+.details-container .ver-mas {
+  color: #e81c1c;
+  cursor: pointer;
+  font-size: 13px;
+  margin-top: 4px;
+  display: none; /* oculto por defecto */
+}
 
-  /* Sinopsis */
-  .synopsis {
-    background: #1e1e1e;
-    padding: 15px;
-    border-radius: 10px;
-    line-height: 1.5;
-    color: #ddd;
-  }
+/* Botón de reproducción más grande fijo en la esquina */
+.play-btn {
+  width: 70px;
+  height: 70px;
+  background: #e81c1c;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  bottom: 15px;
+  right: 15px;
+  text-decoration: none;
+  color: #fff;
+  font-size: 30px;
+  box-shadow: 0 0 10px rgba(255,255,255,0.5);
+  z-index: 2;
+}
 
+.play-btn:hover {
+  transform: scale(1.1);
+  transition: transform 0.2s;
+}
 </style>
 </head>
 <body>
 
-<div class="container">
+<div class="detail-background" id="detailBackground"></div>
 
-  <!-- Reproductor -->
-  <div class="player">
-    <iframe src="https://lzplayerfree.blogspot.com/?url=U2FsdGVkX194Yakl5WUPPvf3sQWIypuGMQAC2sRdcIsk8ecQzGwOCTjPysaOgrWk6PseE8J/ooo6eYR/w01XI9%2Bp7bXubUCJDLvWY5quZlgUv%2B8x9/f1b%2BERzg4xIrI6&m=1" allowfullscreen></iframe>
+<div class="detail-container">
+  <div class="poster-container">
+    <img id="detailPoster" src="" alt="Póster">
   </div>
-
-  <!-- Información de la película -->
-  <div class="info-card">
-    <div class="poster">
-      <img src="https://image.tmdb.org/t/p/original/cYDbY4ZSehB0r6qqtghTphq8DTn.jpg" alt="Póster de la película">
-    </div>
-    <div class="details">
-      <h2>Screamboat La Masacre Del Ratón</h2>
-      <p>Publicado por: FILMBOX</p>
-      <p>United States of America · 1 h 42 minut · Año: 2025</p>
-      <div class="rating">
-        <!-- Estrellas -->
-        <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-        <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-        <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-        <svg viewBox="0 0 24 24"><path fill="#555" d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-        <svg viewBox="0 0 24 24"><path fill="#555" d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-        <span style="margin-left:5px;">5.4</span>
+  <div class="details-container">
+    <h1 id="detailTitle"></h1>
+    <div class="info">
+      <div class="item">
+        <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 16H5V9h14z"></path></svg>
+        <span id="detailYear">2025</span>
       </div>
-      <p>Terror, Comedia</p>
+      <div class="item">
+        <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 11h4v2h-6V7h2z"></path></svg>
+        <span id="detailDuration">120 min</span>
+      </div>
+      <div class="item">
+        <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z "></path></svg>
+        <span id="detailRating">8.5</span>
+      </div>
     </div>
+    <div class="sinopsis-wrapper" id="sinopsisWrapper">
+      <p id="detailSynopsis"></p>
+    </div>
+    <div class="ver-mas" id="verMasBtn">Ver más</div>
   </div>
-
-  <!-- Botón Ver en TV -->
-  <div class="buttons">
-    <button id="tvButton">Ver en TV</button>
-  </div>
-
-  <!-- Sinopsis -->
-  <div class="synopsis">
-    Un travieso ratón acecha a un grupo de neoyorquinos en un viaje nocturno en ferry, desatando un caos asesino en un viaje relajante. ¿Podrá la variopinta tripulación del barco encontrar la manera de detener a esta criatura asesina?
-  </div>
-
 </div>
 
+<a id="detailPlay" href="" target="_blank" class="play-btn">▶</a>
+
 <script>
-  // Botón Web Video Caster
-  document.getElementById("tvButton").addEventListener("click", () => {
-    window.location.href = "intent://lzplayerfree.blogspot.com/?url=U2FsdGVkX194Yakl5WUPPvf3sQWIypuGMQAC2sRdcIsk8ecQzGwOCTjPysaOgrWk6PseE8J/ooo6eYR/w01XI9%2Bp7bXubUCJDLvWY5quZlgUv%2B8x9/f1b%2BERzg4xIrI6&m=1#Intent;scheme=https;package=com.instantbits.cast.webvideo;end";
-  });
+function showMovieDetail(posterUrl, backgroundUrl, title, year, duration, rating, synopsis, videoUrl) {
+  document.getElementById('detailPoster').src = posterUrl;
+  document.getElementById('detailBackground').style.backgroundImage = `url('${backgroundUrl}')`;
+  document.getElementById('detailTitle').textContent = title;
+  document.getElementById('detailYear').textContent = year;
+  document.getElementById('detailDuration').textContent = duration;
+  document.getElementById('detailRating').textContent = rating;
+
+  const sinopsisElem = document.getElementById('detailSynopsis');
+  const wrapper = document.getElementById('sinopsisWrapper');
+  const verMasBtn = document.getElementById('verMasBtn');
+
+  sinopsisElem.textContent = synopsis;
+
+  setTimeout(() => {
+    if (sinopsisElem.scrollHeight > wrapper.clientHeight) {
+      verMasBtn.style.display = 'block';
+    } else {
+      verMasBtn.style.display = 'none';
+    }
+  }, 50);
+
+  verMasBtn.onclick = () => {
+    if (wrapper.style.maxHeight === '80px' || wrapper.style.maxHeight === '') {
+      wrapper.style.maxHeight = '200px';
+      wrapper.style.overflowY = 'auto';
+      verMasBtn.textContent = 'Ver menos';
+    } else {
+      wrapper.style.maxHeight = '80px';
+      wrapper.style.overflowY = 'hidden';
+      verMasBtn.textContent = 'Ver más';
+    }
+  }
+
+  document.getElementById('detailPlay').href = videoUrl;
+}
+
+// Ejemplo
+showMovieDetail(
+  'https://image.tmdb.org/t/p/original/cYDbY4ZSehB0r6qqtghTphq8DTn.jpg',
+  'https://image.tmdb.org/t/p/original/vSTLSr2WbQ6jE9cTkk86yQP5Nb1.jpg',
+  'ESCREAMBOAT LA MASACRE DEL RATON',
+  '2025',
+  '1 h 41 min',
+  '7.4',
+  'Un travieso ratón acecha a un grupo de neoyorquinos en un viaje nocturno en ferry, desatando un caos asesino en un viaje relajante. ¿Podrá la variopinta tripulación del barco encontrar la manera de detener a esta criatura asesina?',
+  'https://lzplayerfree.blogspot.com/?url=U2FsdGVkX194Yakl5WUPPvf3sQWIypuGMQAC2sRdcIsk8ecQzGwOCTjPysaOgrWk6PseE8J/ooo6eYR/w01XI9%2Bp7bXubUCJDLvWY5quZlgUv%2B8x9/f1b%2BERzg4xIrI6&m=1'
+);
 </script>
 
 </body>
